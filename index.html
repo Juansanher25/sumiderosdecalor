@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sumideros de Calor | Transferencia de Calor I</title>
+    
+    <!-- Tailwind CSS para diseño -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Configuración de Tailwind -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#1e3a8a',
+                        secondary: '#3b82f6',
+                        accent: '#f59e0b',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- MathJax para ecuaciones en LaTeX -->
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: {
+                fontCache: 'global'
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        /* Estilos personalizados para animaciones */
+        html { scroll-behavior: smooth; }
+        .fade-in { animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .heat-wave {
+            animation: riseUp 2s infinite ease-in-out alternate;
+        }
+        @keyframes riseUp {
+            from { transform: translateY(0) scale(1); opacity: 0.7; }
+            to { transform: translateY(-10px) scale(1.1); opacity: 1; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 font-sans antialiased">
+
+    <!-- Navegación -->
+    <nav class="bg-primary text-white sticky top-0 z-50 shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="font-bold text-xl tracking-wider">UA - Transferencia de Calor</div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-4">
+                        <a href="#intro" class="hover:bg-blue-800 px-3 py-2 rounded-md text-sm font-medium transition">Introducción</a>
+                        <a href="#ecuaciones" class="hover:bg-blue-800 px-3 py-2 rounded-md text-sm font-medium transition">Ecuaciones</a>
+                        <a href="#ejemplos" class="hover:bg-blue-800 px-3 py-2 rounded-md text-sm font-medium transition">Ejemplos</a>
+                        <a href="#quiz" class="hover:bg-blue-800 px-3 py-2 rounded-md text-sm font-medium transition">Cuestionario</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Portada (Hero Section) -->
+    <header class="bg-gradient-to-br from-primary to-blue-900 text-white py-20 shadow-inner">
+        <div class="max-w-4xl mx-auto text-center px-4 fade-in">
+            <h2 class="text-xl md:text-2xl font-light text-blue-200 mb-2">UNIVERSIDAD DE AMÉRICA</h2>
+            <h1 class="text-4xl md:text-6xl font-extrabold mb-6 tracking-tight">Transferencia de Calor I</h1>
+            <div class="w-24 h-1 bg-accent mx-auto mb-6 rounded"></div>
+            <h3 class="text-2xl md:text-3xl font-semibold mb-8 text-white">Tema: Sumideros de Calor (Heat Sinks)</h3>
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl p-6 inline-block text-left border border-white/20">
+                <p class="text-lg"><span class="font-bold text-blue-300">Profesor:</span> Ph.D. Juan Andrés Sandoval Herrera</p>
+                <p class="text-lg"><span class="font-bold text-blue-300">Año:</span> 2026</p>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-5xl mx-auto px-4 py-12 space-y-24">
+
+        <!-- Sección: Introducción -->
+        <section id="intro" class="scroll-mt-24">
+            <div class="flex flex-col md:flex-row gap-12 items-center">
+                <div class="md:w-1/2">
+                    <h2 class="text-3xl font-bold text-primary mb-6 flex items-center gap-2">
+                        <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        1. Introducción
+                    </h2>
+                    <p class="text-lg mb-4 text-justify leading-relaxed">
+                        En un proceso termodinámico de transferencia de calor, siempre existe una fuente que genera energía térmica y un sumidero que la absorbe o disipa. En ingeniería electrónica y mecánica, los <strong>sumideros de calor</strong> (o disipadores) son componentes diseñados con geometrías complejas (aletas) para maximizar el área de contacto con un fluido refrigerante, usualmente aire.
+                    </p>
+                    <p class="text-lg text-justify leading-relaxed">
+                        El propósito principal de un sumidero es absorber el exceso de calor de un componente (como un transistor o microprocesador) y disiparlo hacia el ambiente, manteniendo el componente dentro de su rango de temperatura operativa segura y evitando la falla por fatiga térmica.
+                    </p>
+                </div>
+                
+                <!-- Gráfico SVG Interactivo -->
+                <div class="md:w-1/2 bg-white p-8 rounded-2xl shadow-lg border border-slate-100 flex flex-col items-center">
+                    <h3 class="text-sm font-bold text-slate-400 uppercase tracking-widest mb-4">Mecanismo de Disipación</h3>
+                    <svg viewBox="0 0 200 200" class="w-full max-w-[250px] drop-shadow-xl">
+                        <!-- Placa base -->
+                        <rect x="20" y="140" width="160" height="20" fill="#cbd5e1" rx="2" />
+                        <text x="100" y="154" font-size="10" fill="#475569" text-anchor="middle" font-family="sans-serif" font-weight="bold">BASE DEL SUMIDERO</text>
+                        <!-- Aletas -->
+                        <rect x="30" y="40" width="15" height="100" fill="#94a3b8" rx="1" />
+                        <rect x="65" y="40" width="15" height="100" fill="#94a3b8" rx="1" />
+                        <rect x="100" y="40" width="15" height="100" fill="#94a3b8" rx="1" />
+                        <rect x="135" y="40" width="15" height="100" fill="#94a3b8" rx="1" />
+                        <rect x="170" y="40" width="15" height="100" fill="#94a3b8" rx="1" />
+                        <!-- Transistor -->
+                        <rect x="70" y="160" width="60" height="25" fill="#334155" rx="3" />
+                        <text x="100" y="176" font-size="10" fill="#f8fafc" text-anchor="middle" font-family="sans-serif">CHIP (Q)</text>
+                        <!-- Olas de calor (animadas) -->
+                        <g class="heat-wave text-red-500">
+                            <path d="M 37 30 Q 42 20 37 10" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+                            <path d="M 72 30 Q 77 20 72 10" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+                            <path d="M 107 30 Q 112 20 107 10" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+                            <path d="M 142 30 Q 147 20 142 10" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+                            <path d="M 177 30 Q 182 20 177 10" stroke="currentColor" stroke-width="3" fill="none" stroke-linecap="round"/>
+                        </g>
+                    </svg>
+                    <div class="mt-6 flex flex-wrap justify-center gap-2">
+                        <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-bold border border-red-200">Generación de Calor</span>
+                        <span class="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-bold border border-blue-200">Conducción (Al/Cu)</span>
+                        <span class="px-3 py-1 bg-teal-100 text-teal-800 rounded-full text-xs font-bold border border-teal-200">Convección ($h$)</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección: Ecuaciones -->
+        <section id="ecuaciones" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold text-primary mb-8 flex items-center gap-2 border-b-2 border-slate-200 pb-4">
+                <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3"></path></svg>
+                2. Fundamento Matemático
+            </h2>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                <!-- Red Térmica -->
+                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-accent">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">1. Resistencia Térmica Global</h3>
+                    <p class="text-slate-600 mb-4 text-sm">Simplificación macroscópica que modela el flujo de calor de manera análoga a la Ley de Ohm en circuitos eléctricos.</p>
+                    <div class="bg-slate-50 p-4 rounded-lg overflow-x-auto text-center">
+                        $$ \dot{Q} = \frac{T_{max} - T_\infty}{R_{total}} $$
+                        $$ R_{total} = R_{contacto} + R_{sumidero} $$
+                    </div>
+                    <ul class="text-sm text-slate-600 mt-4 space-y-1">
+                        <li>$\dot{Q}$: Tasa de transferencia de calor [W]</li>
+                        <li>$T_{max}$ (o $T_b$): Temperatura máxima permisible, que es la misma temperatura en la base del equipo que se quiere enfriar [$^\circ$C]</li>
+                        <li>$R_{total}$: Resistencia térmica total [$^\circ$C/W]</li>
+                    </ul>
+                </div>
+
+                <!-- Eficiencia de Aletas -->
+                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-secondary">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">2. Eficiencia de Aleta Recta ($\eta$)</h3>
+                    <p class="text-slate-600 mb-4 text-sm">Cuantifica qué tan cerca opera la aleta respecto a la transferencia de calor máxima teórica (como si toda la aleta estuviera a la temperatura de la base).</p>
+                    <div class="bg-slate-50 p-4 rounded-lg overflow-x-auto text-center">
+                        $$ \eta_{aleta} = \frac{\tanh(mL_c)}{mL_c} $$
+                        $$ m = \sqrt{\frac{hP}{k A_c}} $$
+                    </div>
+                    <ul class="text-sm text-slate-600 mt-4 space-y-1">
+                        <li>$L_c$: Longitud corregida de la aleta [m]</li>
+                        <li>$h$: Coeficiente convectivo [W/m$^2\cdot$K]</li>
+                        <li>$k$: Conductividad térmica del material [W/m$\cdot$K]</li>
+                    </ul>
+                </div>
+
+                <!-- Ley de Enfriamiento de Newton -->
+                <div class="bg-white p-6 rounded-xl shadow-md border-l-4 border-red-500 md:col-span-2">
+                    <h3 class="text-xl font-bold text-slate-800 mb-4">3. Ley de Enfriamiento de Newton (Convección)</h3>
+                    <p class="text-slate-600 mb-4 text-sm">Ecuación fundamental que gobierna la transferencia de calor por convección desde una superficie sólida hacia un fluido circundante.</p>
+                    <div class="bg-slate-50 p-4 rounded-lg overflow-x-auto text-center">
+                        $$ \dot{Q}_{conv} = h \cdot A_s \cdot (T_s - T_\infty) $$
+                    </div>
+                    <ul class="text-sm text-slate-600 mt-4 space-y-1">
+                        <li>$\dot{Q}_{conv}$: Tasa de transferencia de calor por convección [W]</li>
+                        <li>$h$: Coeficiente de transferencia de calor por convección [W/m$^2\cdot^\circ$C]</li>
+                        <li>$A_s$: Área superficial expuesta al fluido [m$^2$]</li>
+                        <li>$T_s$: Temperatura de la superficie [$^\circ$C]</li>
+                        <li>$T_\infty$: Temperatura del fluido en reposo o ambiente [$^\circ$C]</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección: Ejemplos -->
+        <section id="ejemplos" class="scroll-mt-24">
+            <h2 class="text-3xl font-bold text-primary mb-8 flex items-center gap-2 border-b-2 border-slate-200 pb-4">
+                <svg class="w-8 h-8 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                3. Casos de Estudio (Ejemplos Detallados)
+            </h2>
+
+            <!-- Ejemplo 1 -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden mb-8 border border-slate-200">
+                <div class="bg-slate-100 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                    <h3 class="font-bold text-lg text-slate-800">Ejemplo 1: Selección mediante Resistencia Térmica</h3>
+                    <span class="bg-blue-100 text-blue-800 text-xs font-bold px-3 py-1 rounded-full">Nivel: Básico</span>
+                </div>
+                <div class="p-6">
+                    <p class="mb-4 text-slate-700">
+                        Un transistor de potencia disipa $\dot{Q} = 30\text{ W}$ y debe acoplarse a un sumidero de calor. Para no sufrir daños, el transistor no debe exceder los $90^\circ\text{C}$ operando en aire ambiente a $30^\circ\text{C}$. Se incluye una pasta térmica que añade una resistencia de contacto de $0.2^\circ\text{C/W}$. ¿Cuál debe ser la resistencia térmica máxima ($R_{sumidero}$) del sumidero a adquirir?
+                    </p>
+                    
+                    <button onclick="toggleSolution('sol-1')" class="bg-secondary hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                        Revelar Solución Detallada
+                    </button>
+
+                    <div id="sol-1" class="hidden mt-6 bg-blue-50/50 p-6 rounded-xl border border-blue-100 fade-in">
+                        <h4 class="font-bold text-primary mb-3">Solución:</h4>
+                        <p class="mb-2 text-sm text-slate-600"><strong>Paso 1:</strong> Calcular la resistencia térmica total permisible del sistema.</p>
+                        <div class="overflow-x-auto mb-4">
+                            $$ R_{total} = \frac{T_{max} - T_\infty}{\dot{Q}} = \frac{90^\circ\text{C} - 30^\circ\text{C}}{30 \text{ W}} = \frac{60}{30} = 2.0^\circ\text{C/W} $$
+                        </div>
+                        <p class="mb-2 text-sm text-slate-600"><strong>Paso 2:</strong> Descontar la resistencia de contacto (pasta térmica) para aislar la necesidad del sumidero.</p>
+                        <div class="overflow-x-auto mb-4">
+                            $$ R_{total} = R_{contacto} + R_{sumidero} \implies R_{sumidero} = 2.0^\circ\text{C/W} - 0.2^\circ\text{C/W} = 1.8^\circ\text{C/W} $$
+                        </div>
+                        <div class="bg-green-100 text-green-900 p-3 rounded-lg text-sm border border-green-200">
+                            <strong>Respuesta:</strong> El ingeniero debe seleccionar un catálogo comercial y elegir un sumidero cuya resistencia térmica declarada sea de <strong>$1.8^\circ\text{C/W}$ o inferior</strong>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejemplo 2 -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-slate-200">
+                <div class="bg-slate-100 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                    <h3 class="font-bold text-lg text-slate-800">Ejemplo 2: Temperatura Superficial de Operación</h3>
+                    <span class="bg-purple-100 text-purple-800 text-xs font-bold px-3 py-1 rounded-full">Nivel: Intermedio</span>
+                </div>
+                <div class="p-6">
+                    <p class="mb-4 text-slate-700">
+                        Se selecciona el sumidero de calor modelo HS6065, con resistencia térmica $R_{sum} = 2.5^\circ\text{C/W}$. Si se conecta a un dispositivo electrónico que disipa $20\text{ W}$ en un ambiente a $20^\circ\text{C}$, determine la temperatura de operación en la superficie del sumidero.
+                    </p>
+                    
+                    <button onclick="toggleSolution('sol-2')" class="bg-secondary hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                        Revelar Solución Detallada
+                    </button>
+
+                    <div id="sol-2" class="hidden mt-6 bg-blue-50/50 p-6 rounded-xl border border-blue-100 fade-in">
+                        <h4 class="font-bold text-primary mb-3">Solución:</h4>
+                        <p class="mb-2 text-sm text-slate-600">Utilizamos la Ley de Enfriamiento de Newton adaptada a la red de resistencias. Despejamos la temperatura superficial ($T_{sup}$):</p>
+                        <div class="overflow-x-auto mb-4">
+                            $$ \dot{Q} = \frac{T_{sup} - T_\infty}{R_{sumidero}} $$
+                            $$ T_{sup} = \dot{Q} \cdot R_{sumidero} + T_\infty $$
+                        </div>
+                        <p class="mb-2 text-sm text-slate-600">Sustituyendo los valores:</p>
+                        <div class="overflow-x-auto mb-4">
+                            $$ T_{sup} = (20\text{ W})(2.5^\circ\text{C/W}) + 20^\circ\text{C} $$
+                            $$ T_{sup} = 50^\circ\text{C} + 20^\circ\text{C} = 70^\circ\text{C} $$
+                        </div>
+                        <div class="bg-green-100 text-green-900 p-3 rounded-lg text-sm border border-green-200">
+                            <strong>Respuesta:</strong> En estado estacionario, la superficie del disipador alcanzará los <strong>$70^\circ\text{C}$</strong>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Ejemplo 3 -->
+            <div class="bg-white rounded-2xl shadow-lg overflow-hidden border border-slate-200">
+                <div class="bg-slate-100 px-6 py-4 border-b border-slate-200 flex justify-between items-center">
+                    <h3 class="font-bold text-lg text-slate-800">Ejemplo 3: Análisis de sumidero con aletas rectangulares</h3>
+                    <span class="bg-red-100 text-red-800 text-xs font-bold px-3 py-1 rounded-full">Nivel: Avanzado</span>
+                </div>
+                <div class="p-6">
+                    <p class="mb-4 text-slate-700">
+                        Un sumidero de calor de aluminio ($k = 237\text{ W/m}\cdot^\circ\text{C}$) tiene una base cuadrada de $60\text{ mm} \times 60\text{ mm}$ y cuenta con 12 aletas rectangulares. Cada aleta tiene un largo de $w = 60\text{ mm}$, una altura de $L_f = 25\text{ mm}$ y un espesor de $t = 2\text{ mm}$. La temperatura de la base ($T_b$) es de $90^\circ\text{C}$. El aire de enfriamiento está a $20^\circ\text{C}$ con un coeficiente $h = 40\text{ W/m}^2\cdot^\circ\text{C}$. Calcule la eficiencia de una sola aleta y la tasa de transferencia de calor total ($\dot{Q}_{total}$).
+                    </p>
+                    
+                    <button onclick="toggleSolution('sol-3')" class="bg-secondary hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center gap-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"></path></svg>
+                        Revelar Solución Detallada
+                    </button>
+
+                    <div id="sol-3" class="hidden mt-6 bg-blue-50/50 p-6 rounded-xl border border-blue-100 fade-in">
+                        <h4 class="font-bold text-primary mb-3">Solución:</h4>
+                        <p class="mb-2 text-sm text-slate-600"><strong>Paso 1: Eficiencia de la aleta ($\eta_{aleta}$)</strong></p>
+                        <p class="mb-2 text-sm text-slate-600">Primero calculamos la longitud corregida ($L_c$) y el parámetro $m$:</p>
+                        <div class="overflow-x-auto mb-4">
+                            $$ L_c = L_f + \frac{t}{2} = 0.025\text{ m} + \frac{0.002\text{ m}}{2} = 0.026\text{ m} $$
+                            $$ m = \sqrt{\frac{2h}{kt}} = \sqrt{\frac{2(40)}{237(0.002)}} \approx 12.99\text{ m}^{-1} $$
+                            $$ mL_c = 12.99 \times 0.026 \approx 0.338 $$
+                            $$ \eta_{aleta} = \frac{\tanh(mL_c)}{mL_c} = \frac{\tanh(0.338)}{0.338} \approx 0.964 $$
+                        </div>
+                        
+                        <p class="mb-2 text-sm text-slate-600"><strong>Paso 2: Transferencia de calor total ($\dot{Q}_{total}$)</strong></p>
+                        <p class="mb-2 text-sm text-slate-600">Calculamos el calor disipado por las 12 aletas y le sumamos el calor disipado por la base descubierta.</p>
+                        <div class="overflow-x-auto mb-4">
+                            $$ A_{aleta} = 2 \cdot w \cdot L_c = 2(0.06)(0.026) = 0.00312\text{ m}^2 $$
+                            $$ \dot{Q}_{1\_aleta} = \eta_{aleta} \cdot h \cdot A_{aleta} \cdot (T_b - T_\infty) = 0.964(40)(0.00312)(90 - 20) \approx 8.42\text{ W} $$
+                            $$ A_{base\_libre} = (0.06 \times 0.06) - 12(0.06 \times 0.002) = 0.00216\text{ m}^2 $$
+                            $$ \dot{Q}_{base} = h \cdot A_{base\_libre} \cdot (T_b - T_\infty) = 40(0.00216)(70) \approx 6.05\text{ W} $$
+                            $$ \dot{Q}_{total} = 12 \cdot \dot{Q}_{1\_aleta} + \dot{Q}_{base} = 12(8.42) + 6.05 = 107.09\text{ W} $$
+                        </div>
+                        <div class="bg-green-100 text-green-900 p-3 rounded-lg text-sm border border-green-200">
+                            <strong>Respuesta:</strong> La eficiencia de cada aleta es del <strong>96.4%</strong> y el sumidero disipa una tasa total de <strong>$107.09\text{ W}$</strong>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Sección: Quiz Interactivo -->
+        <section id="quiz" class="scroll-mt-24 bg-white p-8 rounded-2xl shadow-xl border-t-8 border-primary">
+            <h2 class="text-3xl font-bold text-slate-800 mb-2 flex items-center gap-2">
+                <svg class="w-8 h-8 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                4. Cuestionario de Comprobación
+            </h2>
+            <p class="text-slate-500 mb-8">Evalúa tus conceptos teóricos sobre transferencia de calor en componentes electrónicos.</p>
+
+            <form id="quizForm" class="space-y-8" onsubmit="return false;">
+                
+                <!-- Pregunta 1 -->
+                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                    <p class="font-semibold text-lg text-slate-800 mb-4">1. Comparando objetos a alta temperatura con objetos que se están enfriando, ¿cuáles presentarán un movimiento molecular más lento?</p>
+                    <div class="space-y-3">
+                        <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-slate-100 transition">
+                            <input type="radio" name="q1" value="a" class="w-5 h-5 text-primary border-gray-300 focus:ring-primary">
+                            <span class="text-slate-700">a) Los objetos a alta temperatura</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-slate-100 transition">
+                            <input type="radio" name="q1" value="b" class="w-5 h-5 text-primary border-gray-300 focus:ring-primary">
+                            <span class="text-slate-700">b) Los objetos que se están enfriando</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-slate-100 transition">
+                            <input type="radio" name="q1" value="c" class="w-5 h-5 text-primary border-gray-300 focus:ring-primary">
+                            <span class="text-slate-700">c) Ambos tienen el mismo movimiento molecular</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Pregunta 2 -->
+                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                    <p class="font-semibold text-lg text-slate-800 mb-4">2. ¿Cuál es el propósito de integrar un sumidero de calor en un circuito con transistores de potencia?</p>
+                    <div class="space-y-3">
+                        <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-slate-100 transition">
+                            <input type="radio" name="q2" value="a" class="w-5 h-5 text-primary border-gray-300 focus:ring-primary">
+                            <span class="text-slate-700">a) Proveer suficiente calor térmico al transistor para arrancar</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-slate-100 transition">
+                            <input type="radio" name="q2" value="b" class="w-5 h-5 text-primary border-gray-300 focus:ring-primary">
+                            <span class="text-slate-700">b) Absorber el exceso de calor generado por el transistor</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-slate-100 transition">
+                            <input type="radio" name="q2" value="c" class="w-5 h-5 text-primary border-gray-300 focus:ring-primary">
+                            <span class="text-slate-700">c) Mantener el transistor en un rango de temperatura seguro y deseado</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-slate-100 transition">
+                            <input type="radio" name="q2" value="d" class="w-5 h-5 text-primary border-gray-300 focus:ring-primary">
+                            <span class="text-slate-700">d) Todas las opciones b y c son correctas</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Pregunta 3 -->
+                <div class="bg-slate-50 p-6 rounded-xl border border-slate-200">
+                    <p class="font-semibold text-lg text-slate-800 mb-4">3. ¿Cuál es la ley macroscópica principal detrás del comportamiento de transferencia térmica conductiva dentro del sumidero?</p>
+                    <div class="space-y-3">
+                        <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-slate-100 transition">
+                            <input type="radio" name="q3" value="a" class="w-5 h-5 text-primary border-gray-300 focus:ring-primary">
+                            <span class="text-slate-700">a) Ley de Avogadro</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-slate-100 transition">
+                            <input type="radio" name="q3" value="b" class="w-5 h-5 text-primary border-gray-300 focus:ring-primary">
+                            <span class="text-slate-700">b) Ley de Fourier</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-slate-100 transition">
+                            <input type="radio" name="q3" value="c" class="w-5 h-5 text-primary border-gray-300 focus:ring-primary">
+                            <span class="text-slate-700">c) Principio de Arquímedes</span>
+                        </label>
+                        <label class="flex items-center space-x-3 cursor-pointer p-2 rounded hover:bg-slate-100 transition">
+                            <input type="radio" name="q3" value="d" class="w-5 h-5 text-primary border-gray-300 focus:ring-primary">
+                            <span class="text-slate-700">d) Ley de Faraday</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="text-center pt-4">
+                    <button type="button" onclick="evaluarQuiz()" class="bg-primary hover:bg-blue-900 text-white text-lg font-bold py-3 px-8 rounded-full shadow-lg transition-transform transform hover:scale-105">
+                        Verificar Respuestas
+                    </button>
+                </div>
+
+                <!-- Resultados -->
+                <div id="quizResult" class="hidden mt-6 p-4 rounded-xl font-bold text-center border">
+                    <!-- Contenido inyectado por JS -->
+                </div>
+
+            </form>
+        </section>
+
+        <!-- Sección: Bibliografía -->
+        <section id="biblio" class="scroll-mt-24">
+            <h2 class="text-2xl font-bold text-slate-800 mb-6 flex items-center gap-2">
+                <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path></svg>
+                Bibliografía y Referencias
+            </h2>
+            <ul class="list-disc list-inside space-y-2 text-slate-600 bg-white p-6 rounded-xl shadow-sm border border-slate-200">
+                <li>Çengel, Y. A., & Ghajar, A. J. <em>Transferencia de Calor y Masa: Fundamentos y Aplicaciones</em> (4ta Ed.). McGraw-Hill. (Capítulo 3: Transferencia de calor estacionaria unidimensional - Superficies con aletas).</li>
+                <li>Sandoval Herrera, J. A. (2025/2026). <em>Transferencia de Calor I: Sumideros de calor [Presentación teórica]</em>. Fundación Universidad de América.</li>
+            </ul>
+        </section>
+
+    </main>
+
+    <footer class="bg-slate-900 text-slate-400 py-8 text-center mt-12">
+        <p class="mb-2">© 2026 Universidad de América - Facultad de Ingeniería</p>
+        <p class="text-sm">Diseñado para el curso de Transferencia de Calor I por el Prof. Sandoval Herrera</p>
+    </footer>
+
+    <!-- Lógica JavaScript interactiva -->
+    <script>
+        // Función para alternar visibilidad de las soluciones
+        function toggleSolution(id) {
+            const el = document.getElementById(id);
+            if (el.classList.contains('hidden')) {
+                el.classList.remove('hidden');
+                // Re-renderizar mathjax si es necesario al hacer visible (opcional, Mathjax suele funcionar igual estando hidden)
+            } else {
+                el.classList.add('hidden');
+            }
+        }
+
+        // Lógica del cuestionario
+        function evaluarQuiz() {
+            const answers = {
+                q1: 'b',
+                q2: 'd',
+                q3: 'b'
+            };
+
+            let score = 0;
+            let total = Object.keys(answers).length;
+
+            for (let question in answers) {
+                const selectedOption = document.querySelector(`input[name="${question}"]:checked`);
+                if (selectedOption) {
+                    if (selectedOption.value === answers[question]) {
+                        score++;
+                        selectedOption.parentElement.classList.add('bg-green-100', 'border', 'border-green-300');
+                    } else {
+                        selectedOption.parentElement.classList.add('bg-red-100', 'border', 'border-red-300');
+                    }
+                }
+            }
+
+            const resultDiv = document.getElementById('quizResult');
+            resultDiv.classList.remove('hidden', 'bg-green-100', 'text-green-800', 'border-green-300', 'bg-red-100', 'text-red-800', 'border-red-300', 'bg-yellow-100', 'text-yellow-800', 'border-yellow-300');
+
+            if (score === total) {
+                resultDiv.innerHTML = `¡Excelente! Has respondido correctamente ${score} de ${total} preguntas. ¡Dominas el concepto teórico! 🎉`;
+                resultDiv.classList.add('bg-green-100', 'text-green-800', 'border-green-300');
+            } else if (score > 0) {
+                resultDiv.innerHTML = `Buen intento. Has respondido correctamente ${score} de ${total} preguntas. Revisa la teoría y vuelve a intentarlo. 📚`;
+                resultDiv.classList.add('bg-yellow-100', 'text-yellow-800', 'border-yellow-300');
+            } else {
+                resultDiv.innerHTML = `No has acertado ninguna pregunta (0 de ${total}). ¡No te preocupes! Repasa la Sección 1 y vuelve a intentarlo. 💡`;
+                resultDiv.classList.add('bg-red-100', 'text-red-800', 'border-red-300');
+            }
+        }
+    </script>
+</body>
+</html>
